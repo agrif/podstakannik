@@ -1,0 +1,5 @@
+*.pyc
+
+# distutils stuff
+build
+dist
