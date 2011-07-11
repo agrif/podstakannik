@@ -16,13 +16,14 @@ default_extensions = {
 default_extension = 'html'
 
 def canonicalize_url(url, def_ext=''):
-    url = filter(lambda s: s != '', url.split('/'))
+    url = url.split('/')
+    ext = def_ext
+    for i, part in enumerate(url):
+        if '.' in part:
+            part, ext = part.rsplit('.', 1)
+            url[i] = part
+    url = filter(lambda s: s != '', url)
     url = '/' + '/'.join(url)
-    
-    if '.' in url:
-        url, ext = url.split('.', 1)
-    else:
-        ext = def_ext
     
     # special case
     if url == '/root':
@@ -49,7 +50,7 @@ def page(request, url):
     else:
         p = get_object_or_404(Page, url=url)
     
-    best_url = p.get_absolute_url()
+    best_url = p.get_absolute_url(ext=ext)
     if 'revision' in request.GET:
         best_url += "?revision=%s" % (str(request.GET['revision']),)
     
@@ -65,7 +66,10 @@ def page(request, url):
         element = {}
         element['current'] = (other_ext == ext)
         element['name'] = extensions[other_ext][0]
-        element['url'] = p.get_absolute_url() + '.' + other_ext
+        if other_ext == def_ext:
+            element['url'] = p.get_absolute_url()
+        else:
+            element['url'] = p.get_absolute_url(ext=other_ext)
         extmap.append(element)
     
     mime = extensions[ext][1]
