@@ -5,6 +5,8 @@ import podstakannik
 setup(name="podstakannik",
       version=podstakannik.__version__,
       description="a hierarchical, pseudo-wiki flatpages replacement for django",
+      url="https://github.com/agrif/podstakannik",
+      
       author=podstakannik.__author__,
       author_email=podstakannik.__contact__,
       

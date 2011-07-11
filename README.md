@@ -1,6 +1,8 @@
 Podsatkannik!
 =============
 
+<https://github.com/agrif/podstakannik>
+
 Podstakannik is replacement for the default Django flatpages, in that
 it is designed to serve static content at specific urls.
 
