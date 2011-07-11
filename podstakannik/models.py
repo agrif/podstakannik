@@ -126,7 +126,10 @@ class Page(MPTTModel, DirtyFieldsMixin):
             return self.url[1:]
     
     def get_absolute_url(self):
-        return reverse('podstakannik.views.page', args=(self.url[1:],))
+        best_url = self.url[1:]
+        if best_url != '' and not self.is_leaf_node():
+            best_url += '/'
+        return reverse('podstakannik.views.page', args=(best_url,))
     
     @property
     def history_url(self):

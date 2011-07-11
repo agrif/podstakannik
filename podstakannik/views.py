@@ -33,6 +33,7 @@ def canonicalize_url(url, def_ext=''):
 def page(request, url):
     def_ext = getattr(settings, 'PODSTAKANNIK_DEFAULT_EXTENSION', default_extension)
     extensions = getattr(settings, 'PODSTAKANNIK_EXTENSIONS', default_extensions)
+    old_url = url
     url, ext = canonicalize_url(url, def_ext)
     if not ext in extensions:
         raise Http404
@@ -47,6 +48,17 @@ def page(request, url):
         p = ver.get_object_version().object
     else:
         p = get_object_or_404(Page, url=url)
+    
+    best_url = p.get_absolute_url()
+    if 'revision' in request.GET:
+        best_url += "?revision=%s" % (str(request.GET['revision']),)
+    
+    if p.is_leaf_node():
+        if old_url.endswith('/'):
+            return HttpResponseRedirect(best_url)
+    else:
+        if old_url != '' and not old_url.endswith('/'):
+            return HttpResponseRedirect(best_url)
     
     extmap = []
     for other_ext in extensions:
