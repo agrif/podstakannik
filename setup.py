@@ -7,7 +7,7 @@ setup(name="podstakannik",
       author_email="aargri@gmail.com",
       
       packages=['podstakannik', 'podstakannik.templatetags'],
-      package_data = {'podstakannik' : ['fixtures/*.json']},
+      package_data = {'podstakannik' : ['fixtures/*.json', 'templates/podstakannik/*']},
       
       classifiers=["Development Status :: 3 - Alpha",
                    "Environment :: Web Environment",

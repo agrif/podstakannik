@@ -1,0 +1,26 @@
+{% extends "podstakannik/page.html" %}
+
+{% block title %}Files for {{ page.title }}{% endblock %}
+
+{% block body %}
+<h1>Files for {{ page.title }}</h1>
+<p>Go back to <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>.</P>
+
+{% if perms.podstakannik.add_file %}
+<hr />
+<h2>Upload</h2>
+<form method="POST" action="" enctype="multipart/form-data">
+  {% csrf_token %}
+  <table>
+	{{ form }}
+  </table>
+  <p><input type="submit" name="commit" value="Submit" /></p>
+</form>
+<hr />
+{% endif %}
+
+<ul>
+  {% for file in files %}
+  <li><a href="{{ file.get_absolute_url }}">{{ file.name }}</a>{% if perms.podstakannik.delete_file %} [<a href="{{ file.delete_url }}">delete</a>]{% endif %} -- {{ file.nice_size }}, MD5: {{ file.md5 }}</li>{% endfor %}
+</ul>
+{% endblock body %}

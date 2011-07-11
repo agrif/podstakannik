@@ -1,0 +1,13 @@
+{% extends "podstakannik/page.html" %}
+
+{% block title %}History for {{ page.title }}{% endblock %}
+
+{% block body %}
+<h1>History for {{ page.title }}</h1>
+<p>Go back to <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>.</p>
+
+<ul>
+  {% for item in history %}
+  <li><a href="{{ page.get_absolute_url }}?revision={{ item.revision.id }}">{{ item.revision.date_created }}</a>{% if item.revision.comment %} - {{ item.revision.comment }}{% endif %}</li>{% endfor %}
+</ul>
+{% endblock body %}

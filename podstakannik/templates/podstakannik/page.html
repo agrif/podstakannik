@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+{% load psk %}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<title>{% block title %}{{ page.title }}{% endblock %}</title>
+  </head>
+  <body>
+	{% block body %}
+	<p>
+	  {% if not page.url == '/' %}
+	  {% for parent in page.get_ancestors %}
+	  {% if not forloop.first %}
+	  |
+	  {% endif %}
+	  <a href="{{ parent.get_absolute_url }}" class="nowrap">{{ parent.title }}</a>
+	  {% endfor %}
+	  |
+	  {{ page.title }}
+	  
+	  (
+	  {% with next=page.get_next_sibling prev=page.get_previous_sibling %}
+	  {% if prev %}
+	  <a href="{{ prev.get_absolute_url }}" class="nowrap">&lt;&nbsp;{{ prev.title }}</a>
+	  {% endif %}
+	  {% if prev and next %}
+	  |
+	  {% endif %}
+	  {% if next %}
+	  <a href="{{ next.get_absolute_url }}" class="nowrap">{{ next.title }}&nbsp;&gt;</a>
+	  {% endif %}
+	  {% endwith %}
+	  )
+
+	  <br />
+	  {% endif %}
+	  
+	  <emph>{{ page.subtitle }}</emph>
+	</p>
+
+	<p>
+	  [<a href="{{ page.history_url }}">history</a>]
+	  [<a href="{{ page.files_url }}">files</a>]
+	  {% if perms.podstakannik.add_page %}[<a href="{{ page.add_url }}">add</a>]{% endif %}
+	  {% if perms.podstakannik.change_page %}[<a href="{{ page.edit_url }}">edit</a>]{% endif %}
+	  {% if perms.podstakannik.add_page and perms.podstakannik.delete_page %}[<a href="{{ page.move_url }}">move</a>]{% endif %}
+	  {% if perms.podstakannik.delete_page %}[<a href="{{ page.delete_url }}">delete</a>]{% endif %}
+	</p>
+	
+	<hr />
+	
+	{{ page.body|psk:page }}
+	
+	<hr />
+	
+	<p>Created {{ page.created }}; last modified {{ page.modified }}.</p>
+
+	{% if alternates %}
+	<p>
+	  This page is available in the following formats:
+	  {% for alternate in alternates %}
+	  {% if alternate.current %}
+	  [<strong>{{ alternate.name|upper }}</strong>]
+	  {% else %}
+	  [<a href="{{ alternate.url }}">{{ alternate.name|upper }}</a>]
+	  {% endif %}
+	  {% endfor %}
+	</p>
+	{% else %}
+	<!-- This page is not available in other formats. -->
+	{% endif %}
+	
+	<p>
+	  This work is available under the <a rel="license" href="{{ page.license.url }}">{{ page.license.name }}</a>.
+	  {% if page.license.image %}
+	  <br />
+	  <a href="{{ page.license.url }}"><img alt="{{ page.license.name }}" src="{{ page.license.image }}" /></a>
+	  {% endif %}
+	</p>
+
+	{% endblock body %}
+  </body>
+</html>
