@@ -1,0 +1,3 @@
+include README.md COPYING
+recursive-include podstakannik/templates/podstakannik/ *
+recursive-include podstakannik/fixtures/ *.json

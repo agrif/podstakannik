@@ -1,10 +1,12 @@
 from distutils.core import setup
 
+import podstakannik
+
 setup(name="podstakannik",
-      version="0.0.1",
+      version=podstakannik.__version__,
       description="a hierarchical, pseudo-wiki flatpages replacement for django",
-      author="Aaron Griffith",
-      author_email="aargri@gmail.com",
+      author=podstakannik.__author__,
+      author_email=podstakannik.__contact__,
       
       packages=['podstakannik', 'podstakannik.templatetags'],
       package_data = {'podstakannik' : ['fixtures/*.json', 'templates/podstakannik/*']},
