@@ -1,5 +1,6 @@
 *.pyc
 
 # distutils stuff
+MANIFEST
 build
 dist
