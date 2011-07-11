@@ -83,7 +83,7 @@ def edit_or_add(request, url, add=False):
                 return HttpResponseRedirect(p.get_absolute_url())
     else:
         if add:
-            form = PageAddForm(initial={'license' : p.license.id, 'parent' : p.id})
+            form = PageAddForm(initial={'markup' : p.markup, 'license' : p.license.id, 'parent' : p.id})
         else:
             form = PageEditForm(instance=p)
     

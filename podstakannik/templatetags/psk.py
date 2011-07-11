@@ -88,7 +88,7 @@ register = template.Library()
 
 @register.filter
 def psk(value, p):
-    fmt = 'markdown'
+    fmt = p.markup
     s = str(value)
     
     for regex, types, fnmap in rules:

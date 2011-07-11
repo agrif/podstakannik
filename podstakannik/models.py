@@ -8,6 +8,22 @@ import reversion
 
 from hashlib import md5
 
+# get a list of supported markups
+markups = []
+def try_markup(mod_name, choice_name=None, human_readable=None):
+    global markups
+    if choice_name is None:
+        choice_name = mod_name
+    if human_readable is None:
+        human_readable = choice_name.capitalize()
+    try:
+        __import__(mod_name)
+        markups.append((choice_name, human_readable))
+    except ImportError:
+        pass
+
+try_markup('markdown')
+
 # useful decorator to turn a 'string/with///bad/form//' into a canonical url
 # ('/string/with/bad/form')
 def canonical_url(fn):
@@ -58,6 +74,7 @@ class Page(MPTTModel, DirtyFieldsMixin):
     
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=200, blank=True)
+    markup = models.CharField(max_length=40, choices=markups)
     license = models.ForeignKey(License)
     
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
@@ -65,7 +82,7 @@ class Page(MPTTModel, DirtyFieldsMixin):
     body = models.TextField(blank=True)
 
     locationfields = ['shortname', 'forceurl', 'parent']
-    contentfields = ['title', 'subtitle', 'license', 'body']
+    contentfields = ['title', 'subtitle', 'markup', 'license', 'body']
     userfields = locationfields + contentfields
     
     def __unicode__(self):
