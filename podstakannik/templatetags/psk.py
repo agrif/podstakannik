@@ -21,6 +21,16 @@ def markdown_page_tree(p, indent=0):
     
     return ret
 
+def page_list(p, fmt):
+    s = ""
+    for child in p.get_children():
+        data = {}
+        data['title'] = child.title
+        data['subtitle'] = child.subtitle
+        data['url'] = child.get_absolute_url()
+        s += fmt.format(**data) + "\n"
+    return s
+
 def file_list(p, glob, fmt):
     s = ""
     for f in p.file_set.all():
@@ -48,6 +58,8 @@ rules = [
      ('page',), {
             'markdown' : markdown_page_tree,
     }),
+    (re.compile(r"\[\[PAGELIST:? *(?:page:([^ ]*) +)?(.*)\]\]"),
+     ('page', 'string'), {'all' : page_list}),
     (re.compile(r"\[\[FILELIST:? *(?:page:([^ ]*) +)?(?:glob:([^ ]*) +)?(.*)\]\]"),
      ('page', 'string', 'string'), {'all' : file_list}),
     
@@ -87,7 +99,7 @@ final = {
 register = template.Library()
 
 @register.filter
-def psk(value, p):
+def psk_text(value, p):
     fmt = p.markup
     s = str(value)
     
@@ -110,10 +122,15 @@ def psk(value, p):
                 return ''
         s = regex.sub(sub_repl, s)
     
+    return s
+
+@register.filter
+def psk(value, p):
+    fmt = p.markup
+    value = psk_text(value, p)
     if fmt in final:
         try:
-            return final[fmt](s)
+            return final[fmt](value)
         except:
             pass
-    
-    return s
+    return value
