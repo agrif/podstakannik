@@ -1,5 +1,6 @@
 import re
 from django import template
+from django.utils.safestring import mark_safe
 from ..models import Page, File
 from fnmatch import fnmatch
 
@@ -130,7 +131,7 @@ def psk(value, p):
     value = psk_text(value, p)
     if fmt in final:
         try:
-            return final[fmt](value)
+            return mark_safe(final[fmt](value))
         except:
             pass
     return value
