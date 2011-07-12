@@ -32,6 +32,10 @@ To run podstakannik, you will need to install the following:
  * [django-reversion](https://github.com/etianen/django-reversion)
  * [python-markdown](http://www.freewisdom.org/projects/python-markdown/)
 
+For django-mptt, you will need at least version 0.5.x, which at the
+time of this writing means checking out and installing the version
+from github. For the others, anything recent should work.
+
 I also tend to run all my output through [typogrify][] to give my
 pages some fancier typographical rules. This is completely optional!
  
