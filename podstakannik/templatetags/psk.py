@@ -9,13 +9,15 @@ try:
 except ImportError:
     markdown = None
 
-def markdown_page_tree(p, indent=0):
-    ret = "    " * indent
+def markdown_page_tree(p, indent=-1):
+    ret = ""
     
-    if p.subtitle:
-        ret += " * [%s](%s) - %s\n" % (p.title, p.get_absolute_url(), p.subtitle)
-    else:
-         ret += " * [%s](%s)\n" % (p.title, p.get_absolute_url())       
+    if indent >= 0:
+        ret += "    " * indent    
+        if p.subtitle:
+            ret += " * [%s](%s) - %s\n" % (p.title, p.get_absolute_url(), p.subtitle)
+        else:
+            ret += " * [%s](%s)\n" % (p.title, p.get_absolute_url())       
          
     for child in p.get_children():
         ret += markdown_page_tree(child, indent + 1)
