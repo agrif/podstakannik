@@ -68,9 +68,9 @@ class License(models.Model):
 # the biggie -- the page class
 class Page(MPTTModel, DirtyFieldsMixin):
     shortname = models.CharField(max_length=40)
-    forceurl = models.CharField(max_length=512, blank=True)
+    forceurl = models.CharField(max_length=255, blank=True)
     # calculated!
-    url = models.CharField(max_length=512, blank=True, editable=False, unique=True, db_index=True)
+    url = models.CharField(max_length=255, blank=True, editable=False, unique=True, db_index=True)
     
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=200, blank=True)
