@@ -81,6 +81,7 @@ Finally, to add tables to your database and add a root page, run
 
     python manage.py syncdb
 	python manage.py loaddata psk_install
+	python manage.py createinitialrevisions
 
 Podstakannik is now installed! It will use default templates for now,
 but you can use the templates in `podstakannik/templates/` as a
