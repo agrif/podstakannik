@@ -50,7 +50,10 @@ def page(request, url):
     else:
         p = get_object_or_404(Page, url=url)
     
-    best_url = p.get_absolute_url(ext=ext)
+    if ext == def_ext:
+        best_url = p.get_absolute_url()
+    else:
+        best_url = p.get_absolute_url(ext=ext)
     if 'revision' in request.GET:
         best_url += "?revision=%s" % (str(request.GET['revision']),)
     
