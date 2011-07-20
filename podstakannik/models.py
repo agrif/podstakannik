@@ -175,7 +175,7 @@ class Page(MPTTModel, DirtyFieldsMixin):
 reversion.register(Page, fields=Page.userfields)
 
 class File(DirtyFieldsMixin):
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, related_name='+')
     parent = models.ForeignKey(Page)
     
     name = models.CharField(max_length=50, blank=True)
