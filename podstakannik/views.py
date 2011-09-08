@@ -10,7 +10,7 @@ from django.conf import settings
 
 # map from ext to (name, mime)
 default_extensions = {
-    'html' : ('xhtml', 'application/xhtml+xml'),
+    'html' : ('html', 'text/html'),
     'txt' : ('txt', 'text/plain'),
 }
 default_extension = 'html'

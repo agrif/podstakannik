@@ -132,7 +132,7 @@ Here's the default settings:
 
 # map from url extension to (human_readable_name, mime_type)
 PODSTAKANNIK_EXTENSIONS = {
-    'html' : ('xhtml', 'application/xhtml+xml'),
+    'html' : ('html', 'text/html'),
     'txt' : ('txt', 'text/plain'),
 }
 PODSTAKANNIK_DEFAULT_EXTENSION = 'html'
