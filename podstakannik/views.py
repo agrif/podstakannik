@@ -3,7 +3,7 @@ from reversion.models import Version
 import reversion
 from mptt.forms import MoveNodeForm
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from django.template import RequestContext
 from django.conf import settings
@@ -77,9 +77,9 @@ def page(request, url):
     
     mime = extensions[ext][1]
     
-    return render_to_response('podstakannik/page.' + ext, {'page' : p, 'alternates' : extmap}, mimetype=mime, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/page.' + ext, {'page' : p, 'alternates' : extmap}, content_type=mime)
 
-@reversion.revision.create_on_success
+@reversion.create_revision
 def edit_or_add(request, url, add=False):
     url, _ = canonicalize_url(url)
     p = get_object_or_404(Page, url=url)
@@ -106,7 +106,7 @@ def edit_or_add(request, url, add=False):
         else:
             form = PageEditForm(instance=p)
     
-    return render_to_response('podstakannik/edit.html', {'form' : form, 'page' : p, 'preview' : preview, 'verb' : verb}, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/edit.html', {'form' : form, 'page' : p, 'preview' : preview, 'verb' : verb})
 
 @permission_required('podstakannik.change_page')
 def edit(request, url):
@@ -118,7 +118,7 @@ def add(request, url):
 
 @permission_required('podstakannik.add_page')
 @permission_required('podstakannik.delete_page')
-@reversion.revision.create_on_success
+@reversion.create_revision
 def move(request, url):
     url, _ = canonicalize_url(url)
     p = get_object_or_404(Page, url=url)
@@ -146,7 +146,7 @@ def move(request, url):
         url_form = PageMoveForm(instance=p)
         node_form = MoveNodeForm(p)
     
-    return render_to_response('podstakannik/move.html', {'url_form' : url_form, 'node_form' : node_form, 'page' : p}, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/move.html', {'url_form' : url_form, 'node_form' : node_form, 'page' : p})
 
 @permission_required('podstakannik.delete_page')
 def delete(request, url):
@@ -160,7 +160,7 @@ def delete(request, url):
             return HttpResponseRedirect(parent.get_absolute_url())
         return HttpResponseRedirect('/')
 
-    return render_to_response('podstakannik/delete.html', {'page' : p}, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/delete.html', {'page' : p})
 
 def history(request, url):
     url, _ = canonicalize_url(url)
@@ -168,7 +168,7 @@ def history(request, url):
     
     history = Version.objects.get_for_object(p).reverse()
     
-    return render_to_response('podstakannik/history.html', {'page' : p, 'history' : history}, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/history.html', {'page' : p, 'history' : history})
 
 ###################
 
@@ -188,7 +188,7 @@ def list_files(request, url):
         form = FileForm()
     
     files = p.file_set.all()
-    return render_to_response('podstakannik/list_files.html', {'page' : p, 'files' : files, 'form' : form}, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/list_files.html', {'page' : p, 'files' : files, 'form' : form})
 
 def file(request, url, name):
     url, _ = canonicalize_url(url)
@@ -206,4 +206,4 @@ def delete_file(request, url, name):
         f.delete()
         return HttpResponseRedirect(parent.files_url)
 
-    return render_to_response('podstakannik/delete.html', {'page' : f.parent, 'file' : f}, context_instance=RequestContext(request))
+    return render(request, 'podstakannik/delete.html', {'page' : f.parent, 'file' : f})
